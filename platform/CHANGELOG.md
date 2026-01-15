@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.25](https://github.com/archestra-ai/archestra/compare/platform-v1.0.24...platform-v1.0.25) (2026-01-15)
+
+
+### Features
+
+* add ZhipuAI provider support ([#2109](https://github.com/archestra-ai/archestra/issues/2109)) ([f949770](https://github.com/archestra-ai/archestra/commit/f9497701eb24691077af49b4716d699cb9dd4ee3))
+
+
+### Documentation
+
+* update RELEASE.md ([#2153](https://github.com/archestra-ai/archestra/issues/2153)) ([179b2be](https://github.com/archestra-ai/archestra/commit/179b2bef8cb2208c7f24f244217021dfc6ca5379))
+
 ## [1.0.24](https://github.com/archestra-ai/archestra/compare/platform-v1.0.23...platform-v1.0.24) (2026-01-15)
 
 
