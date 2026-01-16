@@ -44,6 +44,7 @@ import {
   ApiError,
   Cerebras,
   Gemini,
+  MiniMax,
   Ollama,
   OpenAi,
   Vllm,
@@ -112,6 +113,12 @@ export function registerOpenApiSchemas() {
   });
   z.globalRegistry.add(Ollama.API.ChatCompletionResponseSchema, {
     id: "OllamaChatCompletionResponse",
+  });
+  z.globalRegistry.add(MiniMax.API.ChatCompletionRequestSchema, {
+    id: "MiniMaxChatCompletionRequest",
+  });
+  z.globalRegistry.add(MiniMax.API.ChatCompletionResponseSchema, {
+    id: "MiniMaxChatCompletionResponse",
   });
   z.globalRegistry.add(WebSocketMessageSchema, {
     id: "WebSocketMessage",
