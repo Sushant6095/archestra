@@ -6,6 +6,7 @@ import {
   Anthropic,
   Cerebras,
   Gemini,
+  MiniMax,
   Ollama,
   OpenAi,
   Vllm,
@@ -27,6 +28,7 @@ export const InteractionRequestSchema = z.union([
   Cerebras.API.ChatCompletionRequestSchema,
   Vllm.API.ChatCompletionRequestSchema,
   Ollama.API.ChatCompletionRequestSchema,
+  MiniMax.API.ChatCompletionRequestSchema,
 ]);
 
 export const InteractionResponseSchema = z.union([
@@ -36,6 +38,7 @@ export const InteractionResponseSchema = z.union([
   Cerebras.API.ChatCompletionResponseSchema,
   Vllm.API.ChatCompletionResponseSchema,
   Ollama.API.ChatCompletionResponseSchema,
+  MiniMax.API.ChatCompletionResponseSchema,
 ]);
 
 /**
@@ -110,6 +113,13 @@ export const SelectInteractionSchema = z.discriminatedUnion("type", [
     processedRequest:
       Ollama.API.ChatCompletionRequestSchema.nullable().optional(),
     response: Ollama.API.ChatCompletionResponseSchema,
+  }),
+  BaseSelectInteractionSchema.extend({
+    type: z.enum(["minimax:chatCompletions"]),
+    request: MiniMax.API.ChatCompletionRequestSchema,
+    processedRequest:
+      MiniMax.API.ChatCompletionRequestSchema.nullable().optional(),
+    response: MiniMax.API.ChatCompletionResponseSchema,
   }),
 ]);
 
