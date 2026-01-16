@@ -107,6 +107,14 @@ const PROVIDER_CONFIG: Record<
     consoleUrl: "https://ollama.ai/",
     consoleName: "Ollama",
   },
+  minimax: {
+    name: "MiniMax",
+    icon: "/icons/minimax.png",
+    placeholder: "your-minimax-api-key",
+    enabled: true,
+    consoleUrl: "https://platform.minimax.io/",
+    consoleName: "MiniMax Platform",
+  },
 } as const;
 
 export { PROVIDER_CONFIG };

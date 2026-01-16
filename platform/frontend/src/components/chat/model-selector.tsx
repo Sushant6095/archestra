@@ -47,6 +47,7 @@ const providerToLogoProvider: Record<SupportedProvider, string> = {
   cerebras: "cerebras",
   vllm: "vllm",
   ollama: "ollama",
+  minimax: "minimax",
 };
 
 /**
