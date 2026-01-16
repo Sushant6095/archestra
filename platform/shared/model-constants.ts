@@ -10,6 +10,7 @@ export const SupportedProvidersSchema = z.enum([
   "cerebras",
   "vllm",
   "ollama",
+  "minimax",
 ]);
 
 export const SupportedProvidersDiscriminatorSchema = z.enum([
@@ -19,6 +20,7 @@ export const SupportedProvidersDiscriminatorSchema = z.enum([
   "cerebras:chatCompletions",
   "vllm:chatCompletions",
   "ollama:chatCompletions",
+  "minimax:chatCompletions",
 ]);
 
 export const SupportedProviders = Object.values(SupportedProvidersSchema.enum);
@@ -34,4 +36,5 @@ export const providerDisplayNames: Record<SupportedProvider, string> = {
   cerebras: "Cerebras",
   vllm: "vLLM",
   ollama: "Ollama",
+  minimax: "MiniMax",
 };
