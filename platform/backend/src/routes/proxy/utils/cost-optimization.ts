@@ -6,7 +6,7 @@ import {
   TokenPriceModel,
 } from "@/models";
 import { getTokenizer } from "@/tokenizers";
-import type { Agent, Anthropic, Cerebras, Gemini, OpenAi, Vllm } from "@/types";
+import type { Agent, Anthropic, Cerebras, Gemini, MiniMax, OpenAi, Vllm } from "@/types";
 
 type ProviderMessages = {
   anthropic: Anthropic.Types.MessagesRequest["messages"];
@@ -15,6 +15,7 @@ type ProviderMessages = {
   openai: OpenAi.Types.ChatCompletionsRequest["messages"];
   vllm: Vllm.Types.ChatCompletionsRequest["messages"];
   ollama: Vllm.Types.ChatCompletionsRequest["messages"];
+  minimax: MiniMax.Types.ChatCompletionsRequest["messages"];
 };
 
 /**
