@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsdown && pnpm run sentry:sourcemaps",
     "start": "NODE_ENV=production node --enable-source-maps dist/server.mjs",
-    "dev": "rm -rf dist && tsdown --watch",
+    "dev": "rimraf dist && tsdown --watch",
     "dev:debug": "DEBUG=1 tsdown --watch",
     "test": "vitest",
     "lint": "biome check",
@@ -94,7 +94,9 @@
     "@types/node": "^25.0.3",
     "@types/pg": "^8.15.6",
     "@types/ws": "^8.18.1",
+    "cross-env": "^10.1.0",
     "knip": "^5.79.0",
+    "rimraf": "^6.1.2",
     "tsdown": "^0.18.4",
     "tsx": "^4.21.0",
     "typescript": "^5.9.2",
