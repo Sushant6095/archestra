@@ -8,6 +8,7 @@ import {
   Gemini,
   Ollama,
   OpenAi,
+  Perplexity,
   Vllm,
   Zhipuai,
 } from "./llm-providers";
@@ -29,6 +30,7 @@ export const InteractionRequestSchema = z.union([
   Vllm.API.ChatCompletionRequestSchema,
   Ollama.API.ChatCompletionRequestSchema,
   Zhipuai.API.ChatCompletionRequestSchema,
+  Perplexity.API.ChatCompletionRequestSchema,
 ]);
 
 export const InteractionResponseSchema = z.union([
@@ -39,6 +41,7 @@ export const InteractionResponseSchema = z.union([
   Vllm.API.ChatCompletionResponseSchema,
   Ollama.API.ChatCompletionResponseSchema,
   Zhipuai.API.ChatCompletionResponseSchema,
+  Perplexity.API.ChatCompletionResponseSchema,
 ]);
 
 /**
@@ -120,6 +123,13 @@ export const SelectInteractionSchema = z.discriminatedUnion("type", [
     processedRequest:
       Zhipuai.API.ChatCompletionRequestSchema.nullable().optional(),
     response: Zhipuai.API.ChatCompletionResponseSchema,
+  }),
+  BaseSelectInteractionSchema.extend({
+    type: z.enum(["perplexity:chatCompletions"]),
+    request: Perplexity.API.ChatCompletionRequestSchema,
+    processedRequest:
+      Perplexity.API.ChatCompletionRequestSchema.nullable().optional(),
+    response: Perplexity.API.ChatCompletionResponseSchema,
   }),
 ]);
 
