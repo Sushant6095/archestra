@@ -163,6 +163,10 @@ export const RouteId = {
   ZhipuaiChatCompletionsWithDefaultAgent:
     "zhipuaiChatCompletionsWithDefaultAgent",
   ZhipuaiChatCompletionsWithAgent: "zhipuaiChatCompletionsWithAgent",
+  // Proxy Routes - Perplexity
+  PerplexityChatCompletionsWithDefaultAgent:
+    "perplexityChatCompletionsWithDefaultAgent",
+  PerplexityChatCompletionsWithAgent: "perplexityChatCompletionsWithAgent",
 
   // Chat Routes
   StreamChat: "streamChat",
