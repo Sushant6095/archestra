@@ -12,6 +12,7 @@ import type {
   Cerebras,
   Gemini,
   OpenAi,
+  Perplexity,
   Vllm,
   Zhipuai,
 } from "@/types";
@@ -24,6 +25,7 @@ type ProviderMessages = {
   vllm: Vllm.Types.ChatCompletionsRequest["messages"];
   ollama: Vllm.Types.ChatCompletionsRequest["messages"];
   zhipuai: Zhipuai.Types.ChatCompletionsRequest["messages"];
+  perplexity: Perplexity.Types.ChatCompletionsRequest["messages"];
 };
 
 /**

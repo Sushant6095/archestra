@@ -411,6 +411,49 @@ async function fetchZhipuaiModels(apiKey: string): Promise<ModelInfo[]> {
 }
 
 /**
+ * Fetch models from Perplexity API
+ * Perplexity exposes an OpenAI-compatible /models endpoint
+ */
+async function fetchPerplexityModels(apiKey: string): Promise<ModelInfo[]> {
+  const baseUrl =
+    config.chat.perplexity.baseUrl || config.llm.perplexity.baseUrl;
+  const url = `${baseUrl}/models`;
+
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    logger.error(
+      { status: response.status, error: errorText },
+      "Failed to fetch Perplexity models",
+    );
+    throw new Error(`Failed to fetch Perplexity models: ${response.status}`);
+  }
+
+  const data = (await response.json()) as {
+    data: Array<{
+      id: string;
+      object: string;
+      created?: number;
+      owned_by?: string;
+    }>;
+  };
+
+  return data.data.map((model) => ({
+    id: model.id,
+    displayName: model.id,
+    provider: "perplexity" as const,
+    createdAt: model.created
+      ? new Date(model.created * 1000).toISOString()
+      : undefined,
+  }));
+}
+
+/**
  * Fetch models from Gemini API via Vertex AI SDK
  * Uses Application Default Credentials (ADC) for authentication
  *
@@ -548,6 +591,8 @@ async function getProviderApiKey({
       return config.chat.ollama.apiKey || "";
     case "zhipuai":
       return config.chat.zhipuai?.apiKey || null;
+    case "perplexity":
+      return config.chat.perplexity?.apiKey || null;
     default:
       return null;
   }
@@ -565,6 +610,7 @@ const modelFetchers: Record<
   vllm: fetchVllmModels,
   ollama: fetchOllamaModels,
   zhipuai: fetchZhipuaiModels,
+  perplexity: fetchPerplexityModels,
 };
 
 /**
@@ -603,10 +649,18 @@ export async function fetchModelsForProvider({
   // vLLM and Ollama typically don't require API keys, but need base URL configured
   const isVllmEnabled = provider === "vllm" && config.llm.vllm.enabled;
   const isOllamaEnabled = provider === "ollama" && config.llm.ollama.enabled;
+  const isPerplexityEnabled =
+    provider === "perplexity" && config.llm.perplexity.enabled;
 
   // For Gemini with Vertex AI, we don't need an API key - authentication is via ADC
   // For vLLM and Ollama, API key is optional but base URL must be configured
-  if (!apiKey && !vertexAiEnabled && !isVllmEnabled && !isOllamaEnabled) {
+  if (
+    !apiKey &&
+    !vertexAiEnabled &&
+    !isVllmEnabled &&
+    !isOllamaEnabled &&
+    !isPerplexityEnabled
+  ) {
     logger.debug(
       { provider, organizationId },
       "No API key available for provider",
@@ -635,6 +689,10 @@ export async function fetchModelsForProvider({
       // Ollama doesn't require API key, pass empty or configured key
       models = await modelFetchers[provider](apiKey || "EMPTY");
     } else if (provider === "zhipuai") {
+      if (apiKey) {
+        models = await modelFetchers[provider](apiKey);
+      }
+    } else if (provider === "perplexity" && isPerplexityEnabled) {
       if (apiKey) {
         models = await modelFetchers[provider](apiKey);
       }
