@@ -115,6 +115,14 @@ const PROVIDER_CONFIG: Record<
     consoleUrl: "https://z.ai/model-api",
     consoleName: "Zhipu AI Platform",
   },
+  mistral: {
+    name: "Mistral AI",
+    icon: "/icons/mistral.png",
+    placeholder: "...",
+    enabled: true,
+    consoleUrl: "https://console.mistral.ai/api-keys",
+    consoleName: "Mistral Console",
+  },
 } as const;
 
 export { PROVIDER_CONFIG };

@@ -648,6 +648,130 @@ Return only the JSON object, no other text.`;
 }
 
 /**
+ * Mistral implementation of DualLlmClient
+ * Mistral exposes an OpenAI-compatible API, so we use the OpenAI SDK
+ */
+export class MistralDualLlmClient implements DualLlmClient {
+  private client: OpenAI;
+  private model: string;
+
+  constructor(apiKey: string, model = "mistral-large-latest") {
+    logger.debug({ model }, "[dualLlmClient] Mistral: initializing client");
+    if (!apiKey) {
+      throw new Error("API key required for Mistral dual LLM");
+    }
+    this.client = new OpenAI({
+      apiKey,
+      baseURL: config.llm.mistral.baseUrl,
+    });
+    this.model = model;
+  }
+
+  async chat(messages: DualLlmMessage[], temperature = 0): Promise<string> {
+    logger.debug(
+      { model: this.model, messageCount: messages.length, temperature },
+      "[dualLlmClient] Mistral: starting chat completion",
+    );
+    const response = await this.client.chat.completions.create({
+      model: this.model,
+      messages,
+      temperature,
+    });
+
+    const content = response.choices[0].message.content?.trim() || "";
+    logger.debug(
+      { model: this.model, responseLength: content.length },
+      "[dualLlmClient] Mistral: chat completion complete",
+    );
+    return content;
+  }
+
+  async chatWithSchema<T extends z.ZodSchema>(
+    messages: DualLlmMessage[],
+    schema: T,
+    temperature = 0,
+  ): Promise<z.infer<T>> {
+    logger.debug(
+      {
+        model: this.model,
+        schemaName: schema.name,
+        messageCount: messages.length,
+        temperature,
+      },
+      "[dualLlmClient] Mistral: starting chat with schema",
+    );
+
+    // Mistral supports JSON schema via response_format for some models
+    // Try OpenAI-compatible structured output first
+    try {
+      const response = await this.client.chat.completions.create({
+        model: this.model,
+        messages,
+        response_format: {
+          type: "json_object", // Mistral uses json_object for structured output
+        },
+        temperature,
+      });
+
+      const content = response.choices[0].message.content || "";
+      logger.debug(
+        { model: this.model, responseLength: content.length },
+        "[dualLlmClient] Mistral: chat with schema complete, parsing response",
+      );
+      return JSON.parse(content) as T;
+    } catch (error) {
+      // Fallback to prompt-based approach if structured output not supported
+      logger.debug(
+        {
+          model: this.model,
+          error: error instanceof Error ? error.message : String(error),
+        },
+        "[dualLlmClient] Mistral: structured output not supported, using prompt fallback",
+      );
+
+      const systemPrompt = `You must respond with valid JSON matching this schema:
+${JSON.stringify(schema.schema, null, 2)}
+
+Return only the JSON object, no other text.`;
+
+      const enhancedMessages: DualLlmMessage[] = messages.map((msg, idx) => {
+        if (idx === 0 && msg.role === "user") {
+          return {
+            ...msg,
+            content: `${systemPrompt}\n\n${msg.content}`,
+          };
+        }
+        return msg;
+      });
+
+      const response = await this.client.chat.completions.create({
+        model: this.model,
+        messages: enhancedMessages,
+        temperature,
+      });
+
+      const content = response.choices[0].message.content || "";
+      // Strip markdown code blocks if present
+      const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)```/) || [
+        null,
+        content,
+      ];
+      const jsonText = jsonMatch[1].trim();
+
+      try {
+        return JSON.parse(jsonText) as T;
+      } catch (parseError) {
+        logger.error(
+          { model: this.model, content: jsonText, parseError },
+          "[dualLlmClient] Mistral: failed to parse JSON response",
+        );
+        throw parseError;
+      }
+    }
+  }
+}
+
+/**
  * Zhipuai implementation of DualLlmClient
  * Zhipuai exposes an OpenAI-compatible API, so we use the OpenAI SDK with Zhipuai's base URL
  */
@@ -830,6 +954,11 @@ export function createDualLlmClient(
         throw new Error("API key required for Zhipuai dual LLM");
       }
       return new ZhipuaiDualLlmClient(apiKey, model);
+    case "mistral":
+      if (!apiKey) {
+        throw new Error("API key required for Mistral dual LLM");
+      }
+      return new MistralDualLlmClient(apiKey, model);
     default:
       logger.debug(
         { provider },

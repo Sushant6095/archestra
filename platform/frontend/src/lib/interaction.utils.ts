@@ -12,6 +12,7 @@ import OllamaChatCompletionInteraction from "./llmProviders/ollama";
 import OpenAiChatCompletionInteraction from "./llmProviders/openai";
 import VllmChatCompletionInteraction from "./llmProviders/vllm";
 import ZhipuaiChatCompletionInteraction from "./llmProviders/zhipuai";
+import MistralChatCompletionInteraction from "./llmProviders/mistral";
 
 export interface CostSavingsInput {
   cost: string | null | undefined;
@@ -134,6 +135,12 @@ export class DynamicInteraction implements InteractionUtils {
     }
     if (type === "ollama:chatCompletions") {
       return new OllamaChatCompletionInteraction(interaction);
+    }
+    if (type === "zhipuai:chatCompletions") {
+      return new ZhipuaiChatCompletionInteraction(interaction);
+    }
+    if (type === "mistral:chatCompletions") {
+      return new MistralChatCompletionInteraction(interaction);
     }
     // Default to Gemini for any other provider
     return new GeminiGenerateContentInteraction(interaction);

@@ -230,3 +230,37 @@ See the [Vertex AI authentication guide](https://cloud.google.com/vertex-ai/docs
 - **API Key format**: Obtain your API key from the [Zhipu AI Platform](https://z.ai/)
 - **Free tier available**: The GLM-4.5-Flash model is available on the free tier for testing and development
 - **Chinese language support**: GLM models excel at Chinese language understanding and generation, while maintaining strong English capabilities
+
+## Mistral AI
+
+[Mistral AI](https://mistral.ai/) is a European AI company offering high-performance language models with strong multilingual capabilities. Mistral provides OpenAI-compatible APIs for accessing their models including Mistral Large, Mistral Medium, and Pixtral.
+
+### Supported Mistral APIs
+
+- **Chat Completions API** (`/chat/completions`) - ✅ Fully supported (OpenAI-compatible)
+
+### Mistral Connection Details
+
+- **Base URL**: `http://localhost:9000/v1/mistral/{profile-id}`
+- **Authentication**: Pass your Mistral API key in the `Authorization` header as `Bearer <your-api-key>`
+
+### Environment Variables
+
+| Variable                        | Required | Description                                                                    |
+| ------------------------------- | -------- | ------------------------------------------------------------------------------ |
+| `ARCHESTRA_MISTRAL_BASE_URL`    | No       | Mistral API base URL (default: `https://api.mistral.ai/v1`)                   |
+| `ARCHESTRA_CHAT_MISTRAL_API_KEY` | No       | Default API key for Mistral (can be overridden per conversation/team/org)    |
+
+### Popular Models
+
+- **mistral-large-latest** - Latest large model with advanced capabilities
+- **mistral-medium-latest** - Balanced model for general use
+- **mistral-small-latest** - Lightweight model optimized for speed
+- **pixtral-12b** - Vision-language model for multimodal tasks
+
+### Important Notes
+
+- **OpenAI-compatible API**: Mistral's API follows the OpenAI Chat Completions format, making it easy to switch between providers
+- **API Key format**: Obtain your API key from [Mistral Console](https://console.mistral.ai/api-keys)
+- **Multilingual support**: Mistral models excel at multiple languages including English, French, Spanish, German, and Italian
+- **Streaming support**: Mistral supports streaming responses for real-time interaction

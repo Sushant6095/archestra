@@ -163,6 +163,10 @@ export const RouteId = {
   ZhipuaiChatCompletionsWithDefaultAgent:
     "zhipuaiChatCompletionsWithDefaultAgent",
   ZhipuaiChatCompletionsWithAgent: "zhipuaiChatCompletionsWithAgent",
+  // Proxy Routes - Mistral
+  MistralChatCompletionsWithDefaultAgent:
+    "mistralChatCompletionsWithDefaultAgent",
+  MistralChatCompletionsWithAgent: "mistralChatCompletionsWithAgent",
 
   // Chat Routes
   StreamChat: "streamChat",

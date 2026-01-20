@@ -6,6 +6,7 @@ import {
   Anthropic,
   Cerebras,
   Gemini,
+  Mistral,
   Ollama,
   OpenAi,
   Vllm,
@@ -29,6 +30,7 @@ export const InteractionRequestSchema = z.union([
   Vllm.API.ChatCompletionRequestSchema,
   Ollama.API.ChatCompletionRequestSchema,
   Zhipuai.API.ChatCompletionRequestSchema,
+  Mistral.API.ChatCompletionRequestSchema,
 ]);
 
 export const InteractionResponseSchema = z.union([
@@ -39,6 +41,7 @@ export const InteractionResponseSchema = z.union([
   Vllm.API.ChatCompletionResponseSchema,
   Ollama.API.ChatCompletionResponseSchema,
   Zhipuai.API.ChatCompletionResponseSchema,
+  Mistral.API.ChatCompletionResponseSchema,
 ]);
 
 /**
@@ -120,6 +123,13 @@ export const SelectInteractionSchema = z.discriminatedUnion("type", [
     processedRequest:
       Zhipuai.API.ChatCompletionRequestSchema.nullable().optional(),
     response: Zhipuai.API.ChatCompletionResponseSchema,
+  }),
+  BaseSelectInteractionSchema.extend({
+    type: z.enum(["mistral:chatCompletions"]),
+    request: Mistral.API.ChatCompletionRequestSchema,
+    processedRequest:
+      Mistral.API.ChatCompletionRequestSchema.nullable().optional(),
+    response: Mistral.API.ChatCompletionResponseSchema,
   }),
 ]);
 

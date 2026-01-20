@@ -57,6 +57,7 @@ import {
   ApiError,
   Cerebras,
   Gemini,
+  Mistral,
   Ollama,
   OpenAi,
   Vllm,
@@ -132,6 +133,12 @@ export function registerOpenApiSchemas() {
   });
   z.globalRegistry.add(Zhipuai.API.ChatCompletionResponseSchema, {
     id: "ZhipuaiChatCompletionResponse",
+  });
+  z.globalRegistry.add(Mistral.API.ChatCompletionRequestSchema, {
+    id: "MistralChatCompletionRequest",
+  });
+  z.globalRegistry.add(Mistral.API.ChatCompletionResponseSchema, {
+    id: "MistralChatCompletionResponse",
   });
   z.globalRegistry.add(WebSocketMessageSchema, {
     id: "WebSocketMessage",

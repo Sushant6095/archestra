@@ -226,6 +226,27 @@ const zhipuaiConfig: ToolPersistenceTestConfig = {
   }),
 };
 
+const mistralConfig: ToolPersistenceTestConfig = {
+  providerName: "Mistral",
+  endpoint: (agentId) => `/v1/mistral/${agentId}/chat/completions`,
+  headers: (wiremockStub) => ({
+    Authorization: `Bearer ${wiremockStub}`,
+    "Content-Type": "application/json",
+  }),
+  buildRequest: (content, tools) => ({
+    model: "mistral-large-latest",
+    messages: [{ role: "user", content }],
+    tools: tools.map((t) => ({
+      type: "function",
+      function: {
+        name: t.name,
+        description: t.description,
+        parameters: t.parameters,
+      },
+    })),
+  }),
+};
+
 // =============================================================================
 // Test Suite
 // =============================================================================
@@ -238,6 +259,7 @@ const testConfigs: ToolPersistenceTestConfig[] = [
   vllmConfig,
   ollamaConfig,
   zhipuaiConfig,
+  mistralConfig,
 ];
 
 for (const config of testConfigs) {

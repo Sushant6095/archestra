@@ -5,6 +5,7 @@ import openAiProxyRoutesV1 from "./proxy/openai";
 import anthropicProxyRoutesV2 from "./proxy/routesv2/anthropic";
 import cerebrasProxyRoutesV2 from "./proxy/routesv2/cerebras";
 import geminiProxyRoutesV2 from "./proxy/routesv2/gemini";
+import mistralProxyRoutesV2 from "./proxy/routesv2/mistral";
 import ollamaProxyRoutesV2 from "./proxy/routesv2/ollama";
 import openAiProxyRoutesV2 from "./proxy/routesv2/openai";
 import vllmProxyRoutesV2 from "./proxy/routesv2/vllm";
@@ -62,6 +63,10 @@ export const ollamaProxyRoutes = config.llm.ollama.useV2Routes
   : ollamaProxyRoutesV2; // Ollama only has V2 since it was added after the unified handler
 // Zhipu AI proxy routes - V2 only (new provider, no legacy v1)
 export const zhipuaiProxyRoutes = zhipuaiProxyRoutesV2;
+// Mistral proxy routes - V2 only (new provider, OpenAI-compatible)
+export const mistralProxyRoutes = config.llm.mistral.useV2Routes
+  ? mistralProxyRoutesV2
+  : mistralProxyRoutesV2; // Mistral only has V2 since it was added after the unified handler
 export { default as secretsRoutes } from "./secrets";
 export { default as statisticsRoutes } from "./statistics";
 export { default as teamRoutes } from "./team";

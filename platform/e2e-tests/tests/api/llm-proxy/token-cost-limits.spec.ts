@@ -219,6 +219,26 @@ const zhipuaiConfig: TokenCostLimitTestConfig = {
   },
 };
 
+const mistralConfig: TokenCostLimitTestConfig = {
+  providerName: "Mistral",
+  endpoint: (profileId) => `/v1/mistral/${profileId}/chat/completions`,
+  headers: (wiremockStub) => ({
+    Authorization: `Bearer ${wiremockStub}`,
+    "Content-Type": "application/json",
+  }),
+  buildRequest: (content) => ({
+    model: "test-mistral-cost-limit",
+    messages: [{ role: "user", content }],
+  }),
+  modelName: "test-mistral-cost-limit",
+  tokenPrice: {
+    provider: "mistral",
+    model: "test-mistral-cost-limit",
+    pricePerMillionInput: "20000.00",
+    pricePerMillionOutput: "30000.00",
+  },
+};
+
 // =============================================================================
 // Test Suite
 // =============================================================================
@@ -231,6 +251,7 @@ const testConfigs: TokenCostLimitTestConfig[] = [
   vllmConfig,
   ollamaConfig,
   zhipuaiConfig,
+  mistralConfig,
 ];
 
 for (const config of testConfigs) {
