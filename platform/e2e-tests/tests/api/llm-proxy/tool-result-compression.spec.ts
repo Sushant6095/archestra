@@ -320,6 +320,44 @@ const zhipuaiConfig: CompressionTestConfig = {
 // Test Suite
 // =============================================================================
 
+const perplexityConfig: CompressionTestConfig = {
+  providerName: "Perplexity",
+
+  endpoint: (profileId) => `/v1/perplexity/${profileId}/chat/completions`,
+
+  headers: (wiremockStub) => ({
+    Authorization: `Bearer ${wiremockStub}`,
+    "Content-Type": "application/json",
+  }),
+
+  // Perplexity uses similar format to OpenAI
+  buildRequestWithToolResult: () => ({
+    model: "sonar",
+    messages: [
+      { role: "user", content: "What files are in the current directory?" },
+      {
+        role: "assistant",
+        content: null,
+        tool_calls: [
+          {
+            id: "call_123",
+            type: "function",
+            function: {
+              name: "list_files",
+              arguments: '{"directory": "."}',
+            },
+          },
+        ],
+      },
+      {
+        role: "tool",
+        tool_call_id: "call_123",
+        content: JSON.stringify(TOOL_RESULT_DATA),
+      },
+    ],
+  }),
+};
+
 const testConfigs: CompressionTestConfig[] = [
   openaiConfig,
   anthropicConfig,
@@ -328,6 +366,7 @@ const testConfigs: CompressionTestConfig[] = [
   vllmConfig,
   ollamaConfig,
   zhipuaiConfig,
+  perplexityConfig,
 ];
 
 for (const config of testConfigs) {

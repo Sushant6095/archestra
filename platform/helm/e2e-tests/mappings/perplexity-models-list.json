@@ -1,0 +1,46 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/perplexity/v1/models.*",
+    "headers": {
+      "Authorization": {
+        "matches": "Bearer .*"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "object": "list",
+      "data": [
+        {
+          "id": "sonar",
+          "object": "model",
+          "created": 1753632000,
+          "owned_by": "perplexity"
+        },
+        {
+          "id": "sonar-pro",
+          "object": "model",
+          "created": 1753632000,
+          "owned_by": "perplexity"
+        },
+        {
+          "id": "sonar-reasoning",
+          "object": "model",
+          "created": 1753632000,
+          "owned_by": "perplexity"
+        },
+        {
+          "id": "sonar-reasoning-pro",
+          "object": "model",
+          "created": 1753632000,
+          "owned_by": "perplexity"
+        }
+      ]
+    }
+  }
+}
