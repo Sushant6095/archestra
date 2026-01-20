@@ -49,7 +49,7 @@ export type ChatApiKeyResponse =
   archestraApiTypes.GetChatApiKeysResponses["200"][number];
 
 const PROVIDER_CONFIG: Record<
-  CreateChatApiKeyBody["provider"],
+  CreateChatApiKeyBody["provider"] | "deepseek",
   {
     name: string;
     icon: string;
@@ -114,6 +114,14 @@ const PROVIDER_CONFIG: Record<
     enabled: true,
     consoleUrl: "https://z.ai/model-api",
     consoleName: "Zhipu AI Platform",
+  },
+  deepseek: {
+    name: "DeepSeek",
+    icon: "/icons/deepseek.png",
+    placeholder: "sk-...",
+    enabled: true,
+    consoleUrl: "https://platform.deepseek.com/api_keys",
+    consoleName: "DeepSeek Platform",
   },
 } as const;
 

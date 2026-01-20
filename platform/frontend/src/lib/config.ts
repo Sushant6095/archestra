@@ -3,7 +3,7 @@ import type { PostHogConfig } from "posthog-js";
 
 const environment = process.env.NODE_ENV?.toLowerCase() ?? "";
 
-const DEFAULT_BACKEND_URL = "http://localhost:9000";
+const DEFAULT_BACKEND_URL = "http://127.0.0.1:9000";
 
 /**
  * Get the backend API base URL.
@@ -68,9 +68,9 @@ export const getDisplayProxyUrl = (): string => {
 const getWebSocketBaseUrl = (): string => {
   const backendBaseUrl = getBackendBaseUrl();
 
-  // In development, use localhost
+  // In development, use 127.0.0.1 (IPv4)
   if (!backendBaseUrl || typeof window === "undefined") {
-    return "ws://localhost:9000";
+    return "ws://127.0.0.1:9000";
   }
 
   // Convert http(s) to ws(s)

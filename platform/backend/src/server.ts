@@ -56,6 +56,7 @@ import {
   Anthropic,
   ApiError,
   Cerebras,
+  Deepseek,
   Gemini,
   Ollama,
   OpenAi,
@@ -132,6 +133,12 @@ export function registerOpenApiSchemas() {
   });
   z.globalRegistry.add(Zhipuai.API.ChatCompletionResponseSchema, {
     id: "ZhipuaiChatCompletionResponse",
+  });
+  z.globalRegistry.add(Deepseek.API.ChatCompletionRequestSchema, {
+    id: "DeepseekChatCompletionRequest",
+  });
+  z.globalRegistry.add(Deepseek.API.ChatCompletionResponseSchema, {
+    id: "DeepseekChatCompletionResponse",
   });
   z.globalRegistry.add(WebSocketMessageSchema, {
     id: "WebSocketMessage",

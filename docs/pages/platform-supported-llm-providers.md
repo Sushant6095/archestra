@@ -230,3 +230,36 @@ See the [Vertex AI authentication guide](https://cloud.google.com/vertex-ai/docs
 - **API Key format**: Obtain your API key from the [Zhipu AI Platform](https://z.ai/)
 - **Free tier available**: The GLM-4.5-Flash model is available on the free tier for testing and development
 - **Chinese language support**: GLM models excel at Chinese language understanding and generation, while maintaining strong English capabilities
+
+## DeepSeek
+
+[DeepSeek](https://deepseek.com/) is a Chinese AI company offering high-performance large language models with strong capabilities in reasoning, coding, and general language tasks. DeepSeek provides both chat and coding-focused models through an OpenAI-compatible API.
+
+### Supported DeepSeek APIs
+
+- **Chat Completions API** (`/chat/completions`) - ✅ Fully supported (OpenAI-compatible)
+
+### DeepSeek Connection Details
+
+- **Base URL**: `http://localhost:9000/v1/deepseek/{profile-id}`
+- **Authentication**: Pass your DeepSeek API key in the `Authorization` header as `Bearer <your-api-key>`
+
+### Environment Variables
+
+| Variable                          | Required | Description                                                                    |
+| --------------------------------- | -------- | ------------------------------------------------------------------------------ |
+| `ARCHESTRA_DEEPSEEK_BASE_URL`     | No       | DeepSeek API base URL (default: `https://api.deepseek.com/v1`)                |
+| `ARCHESTRA_CHAT_DEEPSEEK_API_KEY` | No       | Default API key for DeepSeek (can be overridden per conversation/team/org)     |
+
+### Popular Models
+
+- **deepseek-chat** - General-purpose chat model with strong reasoning capabilities
+- **deepseek-coder** - Specialized model optimized for code generation and understanding
+- **deepseek-reasoner** - Advanced reasoning model for complex problem-solving tasks
+
+### Important Notes
+
+- **OpenAI-compatible API**: DeepSeek's API follows the OpenAI Chat Completions format, making it easy to switch between providers
+- **API Key format**: Obtain your API key from the [DeepSeek Platform](https://platform.deepseek.com/api_keys)
+- **Strong reasoning capabilities**: DeepSeek models excel at complex reasoning tasks and code generation
+- **Cost-effective**: DeepSeek offers competitive pricing for high-performance models

@@ -219,6 +219,33 @@ const zhipuaiConfig: TokenCostLimitTestConfig = {
   },
 };
 
+const deepseekConfig: TokenCostLimitTestConfig = {
+  providerName: "DeepSeek",
+
+  endpoint: (profileId) => `/v1/deepseek/${profileId}/chat/completions`,
+
+  headers: (wiremockStub) => ({
+    Authorization: `Bearer ${wiremockStub}`,
+    "Content-Type": "application/json",
+  }),
+
+  buildRequest: (content) => ({
+    model: "test-deepseek-cost-limit",
+    messages: [{ role: "user", content }],
+  }),
+
+  modelName: "test-deepseek-cost-limit",
+
+  // WireMock returns: prompt_tokens: 1000, completion_tokens: 50
+  // Cost = (1000 * 20000 + 50 * 30000) / 1,000,000 = $21.50
+  tokenPrice: {
+    provider: "deepseek",
+    model: "test-deepseek-cost-limit",
+    pricePerMillionInput: "20000.00",
+    pricePerMillionOutput: "30000.00",
+  },
+};
+
 // =============================================================================
 // Test Suite
 // =============================================================================
@@ -231,6 +258,7 @@ const testConfigs: TokenCostLimitTestConfig[] = [
   vllmConfig,
   ollamaConfig,
   zhipuaiConfig,
+  deepseekConfig,
 ];
 
 for (const config of testConfigs) {

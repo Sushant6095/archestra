@@ -274,7 +274,7 @@ const DEFAULT_BODY_LIMIT = 50 * 1024 * 1024; // 50MB
 export default {
   frontendBaseUrl,
   api: {
-    host: "0.0.0.0",
+    host: "127.0.0.1",
     port: getPortFromUrl(),
     name: "Archestra Platform API",
     version: process.env.ARCHESTRA_VERSION || packageJson.version,
@@ -393,6 +393,13 @@ export default {
         process.env.ARCHESTRA_ZHIPUAI_BASE_URL ||
         "https://api.z.ai/api/paas/v4",
     },
+    deepseek: {
+      enabled: Boolean(process.env.ARCHESTRA_DEEPSEEK_BASE_URL),
+      baseUrl:
+        process.env.ARCHESTRA_DEEPSEEK_BASE_URL ||
+        "https://api.deepseek.com/v1",
+      useV2Routes: process.env.ARCHESTRA_DEEPSEEK_USE_V2_ROUTES !== "false",
+    },
   },
   chat: {
     openai: {
@@ -421,6 +428,13 @@ export default {
       baseUrl:
         process.env.ARCHESTRA_CHAT_ZHIPUAI_BASE_URL ||
         "https://api.z.ai/api/paas/v4",
+    },
+    deepseek: {
+      apiKey: process.env.ARCHESTRA_CHAT_DEEPSEEK_API_KEY || "",
+      baseUrl:
+        process.env.ARCHESTRA_CHAT_DEEPSEEK_BASE_URL ||
+        process.env.ARCHESTRA_DEEPSEEK_BASE_URL ||
+        "https://api.deepseek.com/v1",
     },
     mcp: {
       remoteServerUrl: process.env.ARCHESTRA_CHAT_MCP_SERVER_URL || "",

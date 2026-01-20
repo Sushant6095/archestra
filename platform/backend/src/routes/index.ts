@@ -4,6 +4,7 @@ import geminiProxyRoutesV1 from "./proxy/gemini";
 import openAiProxyRoutesV1 from "./proxy/openai";
 import anthropicProxyRoutesV2 from "./proxy/routesv2/anthropic";
 import cerebrasProxyRoutesV2 from "./proxy/routesv2/cerebras";
+import deepseekProxyRoutesV2 from "./proxy/routesv2/deepseek";
 import geminiProxyRoutesV2 from "./proxy/routesv2/gemini";
 import ollamaProxyRoutesV2 from "./proxy/routesv2/ollama";
 import openAiProxyRoutesV2 from "./proxy/routesv2/openai";
@@ -62,6 +63,10 @@ export const ollamaProxyRoutes = config.llm.ollama.useV2Routes
   : ollamaProxyRoutesV2; // Ollama only has V2 since it was added after the unified handler
 // Zhipu AI proxy routes - V2 only (new provider, no legacy v1)
 export const zhipuaiProxyRoutes = zhipuaiProxyRoutesV2;
+// DeepSeek proxy routes - V2 only (new provider, OpenAI-compatible)
+export const deepseekProxyRoutes = config.llm.deepseek.useV2Routes
+  ? deepseekProxyRoutesV2
+  : deepseekProxyRoutesV2; // DeepSeek only has V2 since it was added after the unified handler
 export { default as secretsRoutes } from "./secrets";
 export { default as statisticsRoutes } from "./statistics";
 export { default as teamRoutes } from "./team";

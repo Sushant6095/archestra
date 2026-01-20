@@ -19,6 +19,7 @@ import { getSecretValueForLlmProviderApiKey } from "@/secrets-manager";
 import {
   type Anthropic,
   constructResponseSchema,
+  type Deepseek,
   type Gemini,
   type OpenAi,
   SupportedChatProviderSchema,
@@ -411,6 +412,48 @@ async function fetchZhipuaiModels(apiKey: string): Promise<ModelInfo[]> {
 }
 
 /**
+ * Fetch models from DeepSeek API
+ * DeepSeek exposes an OpenAI-compatible /models endpoint
+ */
+async function fetchDeepseekModels(apiKey: string): Promise<ModelInfo[]> {
+  const baseUrl = config.chat.deepseek.baseUrl || config.llm.deepseek.baseUrl;
+  const url = `${baseUrl}/models`;
+
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    logger.error(
+      { status: response.status, error: errorText },
+      "Failed to fetch DeepSeek models",
+    );
+    throw new Error(`Failed to fetch DeepSeek models: ${response.status}`);
+  }
+
+  const data = (await response.json()) as {
+    data: Array<{
+      id: string;
+      object: string;
+      created?: number;
+      owned_by?: string;
+    }>;
+  };
+
+  return data.data.map((model) => ({
+    id: model.id,
+    displayName: model.id,
+    provider: "deepseek" as const,
+    createdAt: model.created
+      ? new Date(model.created * 1000).toISOString()
+      : undefined,
+  }));
+}
+
+/**
  * Fetch models from Gemini API via Vertex AI SDK
  * Uses Application Default Credentials (ADC) for authentication
  *
@@ -548,6 +591,8 @@ async function getProviderApiKey({
       return config.chat.ollama.apiKey || "";
     case "zhipuai":
       return config.chat.zhipuai?.apiKey || null;
+    case "deepseek":
+      return config.chat.deepseek?.apiKey || null;
     default:
       return null;
   }
@@ -565,6 +610,7 @@ const modelFetchers: Record<
   vllm: fetchVllmModels,
   ollama: fetchOllamaModels,
   zhipuai: fetchZhipuaiModels,
+  deepseek: fetchDeepseekModels,
 };
 
 /**
@@ -635,6 +681,10 @@ export async function fetchModelsForProvider({
       // Ollama doesn't require API key, pass empty or configured key
       models = await modelFetchers[provider](apiKey || "EMPTY");
     } else if (provider === "zhipuai") {
+      if (apiKey) {
+        models = await modelFetchers[provider](apiKey);
+      }
+    } else if (provider === "deepseek") {
       if (apiKey) {
         models = await modelFetchers[provider](apiKey);
       }

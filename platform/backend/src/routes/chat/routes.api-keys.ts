@@ -54,6 +54,29 @@ const chatApiKeysRoutes: FastifyPluginAsyncZod = async (fastify) => {
         userTeamIds,
         isProfileAdmin,
       );
+      
+      // Validate the response matches the schema before sending
+      // This helps debug schema mismatches
+      const validationResult = ChatApiKeyWithScopeInfoSchema.array().safeParse(apiKeys);
+      if (!validationResult.success) {
+        reply.log.error(
+          {
+            error: validationResult.error.issues,
+            apiKeysCount: apiKeys.length,
+            firstKey: apiKeys[0] ? {
+              id: apiKeys[0].id,
+              provider: apiKeys[0].provider,
+              name: apiKeys[0].name,
+            } : null,
+          },
+          "Response validation failed for chat-api-keys",
+        );
+        throw new ApiError(
+          500,
+          `Response validation failed: ${validationResult.error.issues.map((e) => `${e.path.join('.')}: ${e.message}`).join(', ')}`,
+        );
+      }
+      
       return reply.send(apiKeys);
     },
   );

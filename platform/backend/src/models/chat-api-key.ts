@@ -1,15 +1,17 @@
 import { isVaultReference, parseVaultReference } from "@shared";
 import { and, eq, inArray, or, sql } from "drizzle-orm";
 import db, { schema } from "@/database";
+import logger from "@/logging";
 import { computeSecretStorageType } from "@/secrets-manager/utils";
-import type {
-  ChatApiKey,
-  ChatApiKeyScope,
-  ChatApiKeyWithScopeInfo,
-  InsertChatApiKey,
-  SecretValue,
-  SupportedChatProvider,
-  UpdateChatApiKey,
+import {
+  SupportedChatProviderSchema,
+  type ChatApiKey,
+  type ChatApiKeyScope,
+  type ChatApiKeyWithScopeInfo,
+  type InsertChatApiKey,
+  type SecretValue,
+  type SupportedChatProvider,
+  type UpdateChatApiKey,
 } from "@/types";
 import ConversationModel from "./conversation";
 
@@ -151,27 +153,40 @@ class ChatApiKeyModel {
       .where(and(...conditions))
       .orderBy(schema.chatApiKeysTable.createdAt);
 
-    // Parse vault references from secrets and compute storage type
-    return apiKeys.map((key) => {
-      const vaultRef = parseVaultReferenceFromSecret(key.secret);
-      const secretStorageType = computeSecretStorageType(
-        key.secretId,
-        key.secretIsVault,
-        key.secretIsByosVault,
-      );
-      const {
-        secret: _secret,
-        secretIsVault: _isVault,
-        secretIsByosVault: _isByosVault,
-        ...rest
-      } = key;
-      return {
-        ...rest,
-        vaultSecretPath: vaultRef?.vaultSecretPath ?? null,
-        vaultSecretKey: vaultRef?.vaultSecretKey ?? null,
-        secretStorageType,
-      };
-    });
+    // Filter out keys with invalid providers (e.g., legacy "cohere" records)
+    // and parse vault references from secrets and compute storage type
+    return apiKeys
+      .filter((key) => {
+        // Only return keys with valid providers
+        const result = SupportedChatProviderSchema.safeParse(key.provider);
+        if (!result.success) {
+          logger.warn(
+            { provider: key.provider, keyId: key.id, keyName: key.name },
+            "Filtering out chat API key with invalid provider",
+          );
+        }
+        return result.success;
+      })
+      .map((key) => {
+        const vaultRef = parseVaultReferenceFromSecret(key.secret);
+        const secretStorageType = computeSecretStorageType(
+          key.secretId,
+          key.secretIsVault,
+          key.secretIsByosVault,
+        );
+        const {
+          secret: _secret,
+          secretIsVault: _isVault,
+          secretIsByosVault: _isByosVault,
+          ...rest
+        } = key;
+        return {
+          ...rest,
+          vaultSecretPath: vaultRef?.vaultSecretPath ?? null,
+          vaultSecretKey: vaultRef?.vaultSecretKey ?? null,
+          secretStorageType,
+        };
+      });
   }
 
   /**
@@ -258,27 +273,40 @@ class ChatApiKeyModel {
       .where(and(...conditions))
       .orderBy(schema.chatApiKeysTable.createdAt);
 
-    // Parse vault references from secrets and compute storage type
-    return apiKeys.map((key) => {
-      const vaultRef = parseVaultReferenceFromSecret(key.secret);
-      const secretStorageType = computeSecretStorageType(
-        key.secretId,
-        key.secretIsVault,
-        key.secretIsByosVault,
-      );
-      const {
-        secret: _secret,
-        secretIsVault: _isVault,
-        secretIsByosVault: _isByosVault,
-        ...rest
-      } = key;
-      return {
-        ...rest,
-        vaultSecretPath: vaultRef?.vaultSecretPath ?? null,
-        vaultSecretKey: vaultRef?.vaultSecretKey ?? null,
-        secretStorageType,
-      };
-    });
+    // Filter out keys with invalid providers (e.g., legacy "cohere" records)
+    // and parse vault references from secrets and compute storage type
+    return apiKeys
+      .filter((key) => {
+        // Only return keys with valid providers
+        const result = SupportedChatProviderSchema.safeParse(key.provider);
+        if (!result.success) {
+          logger.warn(
+            { provider: key.provider, keyId: key.id, keyName: key.name },
+            "Filtering out chat API key with invalid provider",
+          );
+        }
+        return result.success;
+      })
+      .map((key) => {
+        const vaultRef = parseVaultReferenceFromSecret(key.secret);
+        const secretStorageType = computeSecretStorageType(
+          key.secretId,
+          key.secretIsVault,
+          key.secretIsByosVault,
+        );
+        const {
+          secret: _secret,
+          secretIsVault: _isVault,
+          secretIsByosVault: _isByosVault,
+          ...rest
+        } = key;
+        return {
+          ...rest,
+          vaultSecretPath: vaultRef?.vaultSecretPath ?? null,
+          vaultSecretKey: vaultRef?.vaultSecretKey ?? null,
+          secretStorageType,
+        };
+      });
   }
 
   /**

@@ -9,7 +9,7 @@ export const createClientConfig: CreateClientConfig = (config) => {
   const isServer = typeof window === "undefined";
 
   const backendUrl =
-    process.env.ARCHESTRA_API_BASE_URL || "http://localhost:9000";
+    process.env.ARCHESTRA_API_BASE_URL || "http://127.0.0.1:9000";
 
   return {
     ...config,
