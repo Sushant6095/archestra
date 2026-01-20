@@ -230,3 +230,37 @@ See the [Vertex AI authentication guide](https://cloud.google.com/vertex-ai/docs
 - **API Key format**: Obtain your API key from the [Zhipu AI Platform](https://z.ai/)
 - **Free tier available**: The GLM-4.5-Flash model is available on the free tier for testing and development
 - **Chinese language support**: GLM models excel at Chinese language understanding and generation, while maintaining strong English capabilities
+
+## Perplexity AI
+
+[Perplexity AI](https://www.perplexity.ai/) is an AI-powered search engine and conversational AI platform that combines large language models with real-time web search capabilities. Perplexity provides OpenAI-compatible APIs for accessing their Sonar models.
+
+### Supported Perplexity APIs
+
+- **Chat Completions API** (`/chat/completions`) - ✅ Fully supported (OpenAI-compatible)
+
+### Perplexity Connection Details
+
+- **Base URL**: `http://localhost:9000/v1/perplexity/{profile-id}`
+- **Authentication**: Pass your Perplexity API key in the `Authorization` header as `Bearer <your-api-key>`
+
+### Environment Variables
+
+| Variable                              | Required | Description                                                                     |
+| ------------------------------------- | -------- | ------------------------------------------------------------------------------- |
+| `ARCHESTRA_PERPLEXITY_BASE_URL`       | No       | Perplexity API base URL (default: `https://api.perplexity.ai`)                 |
+| `ARCHESTRA_CHAT_PERPLEXITY_API_KEY`   | No       | Default API key for Perplexity (can be overridden per conversation/team/org)   |
+
+### Popular Models
+
+- **sonar** - Standard Sonar model for general use
+- **sonar-pro** - Enhanced Sonar Pro model with improved capabilities
+- **sonar-reasoning** - Sonar Reasoning model optimized for complex reasoning tasks
+- **sonar-reasoning-pro** - Sonar Reasoning Pro with advanced reasoning capabilities
+
+### Important Notes
+
+- **OpenAI-compatible API**: Perplexity's API follows the OpenAI Chat Completions format, making it easy to switch between providers
+- **API Key format**: Obtain your API key from [Perplexity Settings](https://www.perplexity.ai/settings/api) (format: `pplx-...`)
+- **Real-time search**: Perplexity models can access real-time web information, making them ideal for up-to-date information retrieval
+- **Streaming support**: Perplexity supports streaming responses for real-time interaction
