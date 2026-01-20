@@ -115,6 +115,14 @@ const PROVIDER_CONFIG: Record<
     consoleUrl: "https://z.ai/model-api",
     consoleName: "Zhipu AI Platform",
   },
+  perplexity: {
+    name: "Perplexity AI",
+    icon: "/icons/perplexity.png",
+    placeholder: "pplx-...",
+    enabled: true,
+    consoleUrl: "https://www.perplexity.ai/settings/api",
+    consoleName: "Perplexity Settings",
+  },
 } as const;
 
 export { PROVIDER_CONFIG };
